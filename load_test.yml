@@ -1,0 +1,19 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 15
+      arrivalRate: 20
+  processor: "./generate_data.js"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+scenarios:
+  - name: "Enviar dados do veículo"
+    flow:
+      - function: "generateDataWithSerial"
+      - loop:
+          - post:
+              url: "/vehicle-data/receive-and-filter"
+              json: "{{ generatedData }}"
+          - think: 0.001
+        count: 300

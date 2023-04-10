@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste Cliente Socket.io</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const socket = io('http://localhost:3000');
+      const statusElement = document.getElementById('status');
+      const tableElement = document.getElementById('dataTable');
+
+      const updateTable = (data) => {
+        const row = tableElement.insertRow(-1);
+        Object.values(data).forEach(value => {
+          const cell = row.insertCell(-1);
+          cell.textContent = value;
+        });
+      };
+
+      socket.on('connect', () => {
+        console.log('Conectado ao servidor');
+        statusElement.textContent = 'Conectado ao servidor';
+      });
+
+      socket.on('filteredData', (data) => {
+        console.log('Dados filtrados recebidos:', data);
+        updateTable(data);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Desconectado do servidor');
+        statusElement.textContent = 'Desconectado do servidor';
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Teste Cliente Socket.io</h1>
+  <div id="status"></div>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Serial</th>
+        <th>Situação Cadastro</th>
+        <th>Situação Movimento</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</body>
+</html>
